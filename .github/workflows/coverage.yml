@@ -24,6 +24,6 @@ jobs:
           pipenv install --dev
       - name: Generate Report
         run: |
-          coverage run -m pytest
+          pipenv run coverage run -m pytest
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
