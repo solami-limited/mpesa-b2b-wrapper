@@ -21,6 +21,7 @@ pytest = "*"
 pytest-mock = "*"
 pytest-dotenv = "*"
 coverage = "*"
+coveralls = "*"
 
 [requires]
 python_version = "3.11"
