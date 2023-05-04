@@ -1,5 +1,5 @@
 ### Initiate MPESA B2B payment
-POST http://127.0.0.1:5000/api/v1/payment/initiate
+POST http://127.0.0.1:5000/api/v1.0/payment/initiate
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ### Confirm MPESA B2B payment
-POST http://127.0.0.1:5000/api/v1/payment/confirm
+POST http://127.0.0.1:5000/api/v1.0/payment/confirm
 Content-Type: application/json
 
 {
@@ -65,7 +65,7 @@ Content-Type: application/json
 }
 
 ### Timeout MPESA B2B Payment
-POST http://127.0.0.1:5000/api/v1/payment/confirm
+POST http://127.0.0.1:5000/api/v1.0/payment/confirm
 Content-Type: application/json
 
 {
