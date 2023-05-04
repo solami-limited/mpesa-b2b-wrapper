@@ -1,15 +1,13 @@
-name: Python application
+name: PyTest
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
@@ -23,9 +21,11 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install pipenv
       run: |
-        pip install --upgrade pip
-        pip install pipenv
-    - name: Test with pytest
+        python -m pip install --upgrade pipenv wheel
+    - name: Install dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
       run: |
         pipenv install --dev
+    - name: Run test suite
+      run: |
         pipenv run pytest
