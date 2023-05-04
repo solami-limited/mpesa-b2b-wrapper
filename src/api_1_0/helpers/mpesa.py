@@ -17,7 +17,7 @@ class MPESA:
         """Initializes the MPESA class."""
         self.data = req
         # final response template to be returned to the client
-        self.response = dict(status_message='', status_code=0, account_reference=self.data['pnr'])
+        self.response = dict(status_message='', status_code='0', account_reference=self.data['pnr'])
 
     def initiate_b2b(self) -> Tuple[dict, bool]:
         """Initiates a B2B payment."""
@@ -30,6 +30,7 @@ class MPESA:
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer {}'.format(MPESA.generate_access_token())
                 }
+                error = ''  # holds any error that may occur during the API call
                 try:
                     response = requests.post(url=endpoint, json=payload, headers=headers)
                     if response.status_code == requests.codes.ok:
@@ -37,7 +38,7 @@ class MPESA:
                 except (requests.ConnectTimeout, requests.ConnectionError, Exception) as e:
                     error = str(e)
                 if error or response.get('errorCode') \
-                        or response.get('ResponseCode', -1) != current_app.config['MPESA_B2B_SUCCESS_CODE']:
+                        or response.get('ResponseCode') != current_app.config['MPESA_B2B_SUCCESS_CODE']:
                     self.response['status_message'] = 'Failed to initiate B2B payment.'
                     self.response['status_code'] = current_app.config['GENERIC_FAILURE_CODE']
                     return self.response, True
@@ -58,7 +59,7 @@ class MPESA:
         """Builds the payload for the B2B request."""
         return {
             'Initiator': os.environ.get('B2B_INITIATOR'),
-            'SecurityCredential': MPESA.rsa_encrypt(current_app.config['B2C_INITIATOR_PASSWORD'], certificate),
+            'SecurityCredential': MPESA.rsa_encrypt(os.environ.get('B2B_INITIATOR_PASSWORD'), certificate),
             'CommandID': os.environ.get('B2B_COMMAND_ID'),
             'Amount': self.data['amount'],
             'PartyA': os.environ.get('B2B_SHORT_CODE'),
