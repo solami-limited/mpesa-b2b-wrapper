@@ -1,5 +1,7 @@
 # MPESA B2B API (wrapper)
 
+[![Build Status](https://github.com//clovisphere/mpesa-b2b-api.svg?branch=main)](https://github.com/clovisphere/mpesa-b2b-wrapper/actions/workflows/python-app.yml/badge.svg)
+
 A wrapper that makes it easy to integrate with the [MPESA B2B API](https://developer.safaricom.co.ke/Documentation).
 
 The below endpoints are available:
