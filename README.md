@@ -12,6 +12,13 @@ The below endpoints are available:
 
 ☝🏽 See [requests.http](requests.http) for sample requests + payloads.
 
+TODO:
+- [ ] Unit tests
+- [ ] Logging
+- [ ] CI/CD
+- [ ] Dockerize
+- [ ] Deployment (or how-to section on how to deploy or run the app in production)
+
 ## Usage
 
 Make a copy of [.env.dev](.env.dev) file named `.env`, and make sure all the **ENVIRONMENT_VARIABLES** are set.
