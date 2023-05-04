@@ -1,0 +1,8 @@
+### Initiate MPESA B2B payment
+POST http://127.0.0.1:5000/api/v1/payment/initiate
+Content-Type: application/json
+
+{
+  "Amount": "1b2",
+  "pnr": "123xdr56yt"
+}
