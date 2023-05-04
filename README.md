@@ -21,7 +21,7 @@ The below endpoints are available:
 - [ ] Logging
 - [x] CI/CD
 - [ ] Dockerize
-- [ ] Deployment (or how-to section on how to deploy or run the app in production)
+- [x] Deployment (or how-to section on how to deploy or run the app in production)
 
 ### Usage
 
