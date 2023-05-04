@@ -5,15 +5,15 @@ A wrapper that makes it easy to integrate with the [MPESA B2B API](https://devel
 The below endpoints are available:
 
 ```bash
-[POST] api/v1/payment/initiate                      ✅
-[POST] api/v1/payment/timeout                       ✅
-[POST] api/v1/payment/confirm                       ✅
+[POST] api/v1.0/payment/initiate                      ✅
+[POST] api/v1.0/payment/timeout                       ✅
+[POST] api/v1.0/payment/confirm                       ✅
 ````
 
 ☝🏽 See [requests.http](requests.http) for sample requests + payloads.
 
 TODO:
-- [ ] Unit tests
+- [x] Unit tests
 - [ ] Logging
 - [ ] CI/CD
 - [ ] Dockerize
@@ -47,7 +47,7 @@ If you need any help with migration, please refer to [Flask-Migrate](https://fla
 To run unittest,
 
 ```bash
-$ flask test
+$ python -m pytest
 ```
 
 If all went well, your app should be available on [http://localhost:5000](http://localhost:5000)
