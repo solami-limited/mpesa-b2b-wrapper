@@ -1,5 +1,5 @@
 # certificate
-config/cert/*.*
+config/cert/*.cer
 
 # logs
 logs/*.log
