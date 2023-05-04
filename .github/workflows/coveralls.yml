@@ -1,4 +1,4 @@
-name: Test Coveralls
+name: Coveralls
 on: ["push", "pull_request"]
 jobs:
   test:
@@ -17,7 +17,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install pipenv
         run: |
-          python -m pip3 install --upgrade pipenv
+          python -m pip install --upgrade pipenv
       - name: Install all development dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
