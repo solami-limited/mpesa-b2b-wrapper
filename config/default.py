@@ -17,9 +17,9 @@ class Config:
     TIME_ZONE = 'Africa/Nairobi'
     TIME_FORMAT = '%Y%m%d%H%M%S'
     # Daraja/MPESA Status Codes
-    MPESA_B2B_SUCCESS_CODE = 0
-    MPESA_B2B_FAILURE_CODE = 1
-    GENERIC_FAILURE_CODE = 999
+    MPESA_B2B_SUCCESS_CODE = '0'
+    MPESA_B2B_FAILURE_CODE = '1'
+    GENERIC_FAILURE_CODE = '999'
 
     @staticmethod
     def init_app(app):
