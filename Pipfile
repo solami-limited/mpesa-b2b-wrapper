@@ -20,6 +20,7 @@ pycryptodome = "*"
 pytest = "*"
 pytest-mock = "*"
 pytest-dotenv = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.11"
