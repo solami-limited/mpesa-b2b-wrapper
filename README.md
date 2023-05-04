@@ -1,6 +1,8 @@
-# Daraja-B2B
+# MPESA B2B API (wrapper)
 
-This API has the following endpoints:
+A wrapper that makes it easy to integrate with the [MPESA B2B API](https://developer.safaricom.co.ke/Documentation).
+
+The below endpoints are available:
 
 ```bash
 [POST] api/v1/payment/initiate                      ✅
@@ -8,21 +10,32 @@ This API has the following endpoints:
 [POST] api/v1/payment/confirm                       ✅
 ````
 
-### Usage:
+☝🏽 See [requests.http](requests.http) for sample requests + payloads.
 
-#### Development
+## Usage
 
-You need [python](https://www.python.org/downloads/) and [pipenv](https://pypi.org/project/pipenv/). You can read more about pipenv [here](https://pipenv.pypa.io/en/latest/).
+Make a copy of [.env.dev](.env.dev) file named `.env`, and make sure all the **ENVIRONMENT_VARIABLES** are set.
+
+### Prerequisites:
+
+- [Python](https://www.python.org/downloads/release/python-3112/)
+- [Pipenv](https://pipenv.pypa.io/en/latest/)
+- [SQLite](https://www.sqlite.org/index.html) (optional | for development and testing)
+- [MySQL](https://www.mysql.com/) or [PostgreSQL](https://www.postgresql.org/) (optional)
+
+#### Development:
 
 ```bash
-$ cd daraja-b2b
-$ pipenv install
-$ pipenv shell
-$ export FLASK_ENV=development
-$ export SECRET_KEY=AS4rWWGq3ASDdU4EfqYfb545b3c1177c79de83216824a587
-$ flask db upgrade
-$ flask run
+$ cd mpesa-b2b-api  # cd into project root
+$ export FLASK_ENV=development  # enable development mode
+$ export SECRET_KEY=AS4rWWGq3ASDdU4EfqYfb545b3c1177c79de83216824a587  # set the secret key
+$ pipenv install # install dependencies
+$ pipenv shell  # activate virtualenv
+$ flask db upgrade  # run migrations
+$ flask run --debug  # run the app in debug mode
 ```
+
+If you need any help with migration, please refer to [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/).
 
 To run unittest,
 
