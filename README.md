@@ -1,5 +1,7 @@
 # MPESA B2B API (wrapper)
 
+[![PyTest](https://github.com/clovisphere/mpesa-b2b-wrapper/actions/workflows/pytest.yml/badge.svg?branch=main)](https://github.com/clovisphere/mpesa-b2b-wrapper/actions/workflows/pytest.yml)
+
 A wrapper that makes it easy to integrate with the [MPESA B2B API](https://developer.safaricom.co.ke/Documentation).
 
 The below endpoints are available:
