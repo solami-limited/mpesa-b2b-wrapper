@@ -15,7 +15,7 @@ class Validator:
             if request.get(key) is None:
                 error_message = f"missing key ~ <{key}>."
                 break
-            if not request.get(key):
+            if key == 'pnr' and not request.get(key):
                 error_message = f"<{key}> cannot be empty."
                 break
             try:
