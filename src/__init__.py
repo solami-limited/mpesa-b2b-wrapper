@@ -29,5 +29,5 @@ def create_app(config_name):
     # register blueprints
     from .api_1_0 import error_bp, api_bp
     app.register_blueprint(error_bp)
-    app.register_blueprint(api_bp, url_prefix='/api/v1')
+    app.register_blueprint(api_bp, url_prefix='/api/v1.0')
     return app
