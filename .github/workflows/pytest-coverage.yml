@@ -23,6 +23,8 @@ jobs:
           pipenv install --dev
       - name: Run tests
         run: |
-          pipenv run coverage run -m pytest
-      - name: Coveralls
-        uses: coverallsapp/github-action@v2
+          pipenv run coverage run --source=. -m pytest
+      - name: Coveralls report
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
