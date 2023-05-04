@@ -89,9 +89,8 @@ class MPESA:
                 .filter_by(originator_conversation_id=req.get('OriginatorConversationID', '-1'))\
                 .order_by(B2B.id.desc())\
                 .first()
-            if record and record.status == 'PENDING':
-                record.status = StatusEnum.SUCCESS.value if req.get('ResultCode') == 0\
-                    else StatusEnum.FAILED.value
+            if record and record.status == StatusEnum.PENDING:  # update only when status is 'PENDING'
+                record.status = StatusEnum.SUCCESS if req.get('ResultCode') == 0 else StatusEnum.FAILED
                 db.session.commit()
 
     @staticmethod
