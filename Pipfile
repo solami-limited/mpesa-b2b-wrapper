@@ -18,9 +18,8 @@ pycryptodome = "*"
 
 [dev-packages]
 pytest = "*"
-autopep8 = "*"
 pytest-mock = "*"
-coverage = "*"
+pytest-dotenv = "*"
 
 [requires]
 python_version = "3.11"
