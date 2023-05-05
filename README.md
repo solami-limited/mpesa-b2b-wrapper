@@ -27,6 +27,10 @@ The below endpoints are available:
 
 Make a copy of [.env.dev](.env.dev) file named `.env`, and make sure all the **ENVIRONMENT_VARIABLES** are set.
 
+```bash
+$ cp .env.dev .env  # make a copy of .env.dev called .env
+```
+
 #### (1) Development
 
 Prerequisites:
@@ -39,7 +43,7 @@ Prerequisites:
 $ git clone git@github.com:clovisphere/mpesa-b2b-wrapper.git  # clone the repo
 $ cd mpesa-b2b-wrapper  # cd into project root
 $ export FLASK_ENV=development  # enable development mode
-$ export SECRET_KEY=AS4rWWGq3ASDdU4EfqYfb545b3c1177c79de83216824a587  # set the secret key
+$ export SECRET_KEY=dummy_secret_key  # set the secret key
 $ pipenv install # install dependencies
 $ pipenv shell  # activate virtualenv
 $ flask db upgrade  # run migrations
@@ -51,7 +55,9 @@ If you need any help with migration, please refer to [Flask-Migrate](https://fla
 To run unittest,
 
 ```bash
-$ python -m pytest
+$ pipenv install --dev  # install dev dependencies
+$ coverage run -m pytest  # run tests
+$ coverage report -m  # generate coverage report
 ```
 
 If all went well, your app should be available on [http://localhost:5000](http://localhost:5000)
