@@ -50,7 +50,7 @@ mock_unsuccessful_response = {
 }
 
 
-def test_make_successful_initiate_b2b_call(app, supply_test_config, mocker):
+def test_make_successful_initiate_b2b_call(app, mocker):
     """Test that the initiate_b2b method makes a successful call to the B2B API."""
     with app.app_context():
         response, _, mock_requests = generic_mocking(mocker, 200, mock_successful_response)
@@ -63,7 +63,7 @@ def test_make_successful_initiate_b2b_call(app, supply_test_config, mocker):
         assert response['account_reference'] == m.data['pnr']
 
 
-def test_make_unsuccessful_initiate_b2b_call(app, supply_test_config, mocker):
+def test_make_unsuccessful_initiate_b2b_call(app, mocker):
     """Test that B2B API returns an error and the initiate_b2b method handles it."""
     with app.app_context():
         response, _, _ = generic_mocking(mocker, 200, mock_unsuccessful_response)
