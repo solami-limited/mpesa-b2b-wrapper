@@ -1,10 +1,15 @@
+### Mock MPESA B2B API (via wiremock)
+POST http://127.0.0.1:8080/mpesa/b2b/v1/remittax
+
+{}
+
 ### Initiate MPESA B2B payment
 POST http://127.0.0.1:5000/api/v1.0/payment/initiate
 Content-Type: application/json
 
 {
-  "Amount": "100",
-  "pnr": "123xdr56yt"
+  "Amount": "50",
+  "pnr": "56yR533"
 }
 
 ### Confirm MPESA B2B payment
@@ -16,8 +21,8 @@ Content-Type: application/json
     "ResultType": 0,
     "ResultCode": 0,
     "ResultDesc": "The service request is processed successfully.",
-    "OriginatorConversationID": "10571-7910404-1",
-    "ConversationID": "AG_20191219_00004e48cf7e3533f581",
+    "OriginatorConversationID": "1247_2348",
+    "ConversationID": "AG_201_88531",
     "TransactionID": "NLJ41HAY6Q",
     "ResultParameters": {
       "ResultParameter": [
@@ -73,8 +78,8 @@ Content-Type: application/json
     "ResultType": 0,
     "ResultCode": 2001,
     "ResultDesc": "The initiator information is invalid.",
-    "OriginatorConversationID": "29112-34801843-1",
-    "ConversationID": "AG_20191219_00006c6fddb15123addf",
+    "OriginatorConversationID": "4734_5007",
+    "ConversationID": "AG_095_33231",
     "TransactionID": "NLJ0000000",
     "ReferenceData": {
       "ReferenceItem": {

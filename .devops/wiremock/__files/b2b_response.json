@@ -1,15 +1,6 @@
 {
-  "responses": [
-    {
-      "ConversationID": "AG_{{randomValue length=20 type='ALPHANUMERIC'}}",
-      "OriginatorConversationID": "{{randomValue type='INT' length='4'}}_{{randomValue type='INT' length='7'}}_{{randomValue type='INT' length='1'}}",
-      "ResponseCode": "0",
-      "ResponseDescription": "Accept the service request successfully."
-    },
-    {
-      "requestId": "{{randomValue length=20 type='UUID'}}",
-      "errorCode": "{{randomValue length=5 type='NUMERIC'}}.{{randomValue length=3 type='NUMERIC'}}.{{randomValue length=2 type='NUMERIC'}}",
-      "errorMessage": "Error Occurred - Invalid Access Token - {{randomValue length=20 type='ALPHANUMERIC'}}"
-    }
-  ]
+  "ConversationID": "AG_{{randomValue length=3 type='NUMERIC'}}_{{randomValue length=5 type='NUMERIC'}}",
+  "OriginatorConversationID": "{{randomValue length=4 type='NUMERIC'}}_{{randomValue length=4 type='NUMERIC'}}",
+  "ResponseCode": "0",
+  "ResponseDescription": "Accept the service request successfully."
 }
