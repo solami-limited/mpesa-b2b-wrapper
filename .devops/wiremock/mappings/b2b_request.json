@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/mpesa/b2b/v1/remittax"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "b2b_response.json",
+    "transformers": [
+      "response-template"
+    ],
+    "template": "{{JsonPath request.body '$.responses.[?(@)}' random}}"
+  }
+}

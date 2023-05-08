@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  wiremock:
+    image: wiremock/wiremock:latest
+    container_name: wiremock
+    volumes:
+      - $PWD/.devops/wiremock:/home/wiremock
+    ports:
+      - "8080:8080"
+    command:
+      - --verbose
+      - --global-response-templating
+
+  db:
+    image: mysql:latest
+    container_name: mysql
+    ports:
+      - "3200:3200"
+    environment:
+      MYSQL_DATABASE: demo
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      MYSQL_USER: demo
+      MYSQL_PASSWORD: demo
+    restart: always
