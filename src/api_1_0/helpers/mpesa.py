@@ -30,22 +30,23 @@ class MPESA:
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer {}'.format(MPESA.generate_access_token())
                 }
-                error = ''  # holds any error that may occur during the API call
+                res, err = dict(), ''
                 try:
                     response = requests.post(url=endpoint, json=payload, headers=headers)
                     if response.status_code == requests.codes.ok:
                         response = response.json()
                 except (requests.ConnectTimeout, requests.ConnectionError, Exception) as e:
-                    error = str(e)
-                if error or response.get('errorCode') \
-                        or response.get('ResponseCode') != current_app.config['MPESA_B2B_SUCCESS_CODE']:
+                    err = f'An error occurred while initiating B2B payment: {e}'
+                if err or response.get('errorCode') \
+                        or response.get('ResponseCode', -1) != current_app.config['MPESA_B2B_SUCCESS_CODE']:
                     self.response['status_message'] = 'Failed to initiate B2B payment.'
                     self.response['status_code'] = current_app.config['GENERIC_FAILURE_CODE']
                     return self.response, True
                 # save the B2B payment record by spawning a new thread
                 Thread(
                     target=self._create_b2b_payment,
-                    args=(response['OriginatorConversationID'], response['ConversationID'])
+                    args=(current_app._get_current_object(), response['OriginatorConversationID'],
+                          response['ConversationID'])
                 ).start()
                 # formulate a success response message
                 self.response['status_message'] = 'B2B payment initiated successfully.'
@@ -70,16 +71,17 @@ class MPESA:
             'AccountReference': self.data['pnr']
         }
 
-    def _create_b2b_payment(self, originator_conversation_id: str, conversation_id: str) -> None:
+    def _create_b2b_payment(self, ctx: Any, originator_conversation_id: str, conversation_id: str) -> None:
         """Saves the B2B payment record."""
-        record = B2B(
-            amount=self.data['amount'],
-            pnr=self.data['pnr'],
-            originator_conversation_id=originator_conversation_id,
-            conversation_id=conversation_id
-        )
-        db.session.add(record)
-        db.session.commit()
+        with ctx.app_context():
+            record = B2B(
+                amount=self.data['amount'],
+                pnr=self.data['pnr'],
+                originator_conversation_id=originator_conversation_id,
+                conversation_id=conversation_id
+            )
+            db.session.add(record)
+            db.session.commit()
 
     @staticmethod
     def update_b2b_payment(ctx: Any, req: Dict) -> None:
