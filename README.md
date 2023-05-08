@@ -39,6 +39,16 @@ Prerequisites:
 - [Pipenv](https://pipenv.pypa.io/en/latest/)
 - [SQLite](https://www.sqlite.org/index.html) (for development and testing)
 
+
+Make sure you have both [docker](https://www.docker.com/) and 
+[docker-compose](https://docs.docker.com/compose/) installed locally 
+(use to mock [Daraja/M-PESA](https://developer.safaricom.co.ke) with [wiremock](https://wiremock.org) 
+and run MySQL in a container).
+
+```bash
+docker-compose -f .devops/docker-compose.yml up --build
+````
+
 ```bash
 $ git clone git@github.com:clovisphere/mpesa-b2b-wrapper.git  # clone the repo
 $ cd mpesa-b2b-wrapper  # cd into project root
