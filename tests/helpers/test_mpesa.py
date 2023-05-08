@@ -13,7 +13,7 @@ m = MPESA(
 )
 
 # endpoint
-endpoint = 'https://sandbox.safaricom.co.ke/mpesa/b2b/v1/remittax'
+endpoint = 'http://localhost:8080/mpesa/b2b/v1/remittax'
 
 # headers
 headers = {
