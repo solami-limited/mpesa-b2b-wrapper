@@ -13,6 +13,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     DEBUG = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {'pool_size': 10, 'pool_recycle': 299}
     CERTIFICATE = CERTIFICATE_DIR
     TIME_ZONE = 'Africa/Nairobi'
     TIME_FORMAT = '%Y%m%d%H%M%S'
