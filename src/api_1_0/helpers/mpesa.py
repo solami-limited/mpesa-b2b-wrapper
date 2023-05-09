@@ -19,7 +19,7 @@ class MPESA:
         # final response template to be returned to the client
         self.response = dict(
             status_message='Failed to initiate B2B payment.',
-            status_code=os.environ.get('GENERIC_FAILURE_CODE'),
+            status_code='-1',
             account_reference=self.data['pnr']
         )
 
@@ -47,6 +47,7 @@ class MPESA:
                 if err or response.get('errorCode') \
                         or response.get('ResponseCode', '-1') != current_app.config['MPESA_B2B_SUCCESS_CODE']:
                     current_app.logger.error(f"{self.data['pnr']=} | Failed to initiate B2B payment.")
+                    self.response['status_code'] = current_app.config['GENERIC_FAILURE_CODE']
                     if response.get('errorMessage'):
                         current_app.logger.error(f"{self.data['pnr']=} | {response['errorMessage']}")
                     return self.response, True
@@ -63,6 +64,7 @@ class MPESA:
                 return self.response, False
             # formulate a generic failure response
             current_app.logger.error(f" {self.data['pnr']=} | A similar B2B payment already exists.")
+            self.response['status_code'] = current_app.config['GENERIC_FAILURE_CODE']
             return self.response, True
 
     def _build_b2b_payload(self, certificate: str) -> Dict[str, str]:
