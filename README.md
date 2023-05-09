@@ -20,7 +20,7 @@ The below endpoints are available:
 - [x] Unit tests
 - [ ] Logging
 - [x] CI/CD
-- [ ] Dockerize
+- [x] Dockerize
 - [x] Deployment (or how-to section on how to deploy or run the app in production)
 
 ### Usage
@@ -37,8 +37,10 @@ Prerequisites:
 
 - [Python](https://www.python.org/downloads/release/python-3112/)
 - [Pipenv](https://pipenv.pypa.io/en/latest/)
-- [SQLite](https://www.sqlite.org/index.html) (for development and testing)
+- [SQLite](https://www.sqlite.org/index.html)
+- [MariaDB](https://mariadb.org)
 
+With [Docker](https://www.docker.com/):
 
 Make sure you have both [docker](https://www.docker.com/) and 
 [docker-compose](https://docs.docker.com/compose/) installed locally 
@@ -49,11 +51,15 @@ and run MySQL in a container).
 docker-compose -f .devops/docker-compose.yml up --build
 ````
 
+☝🏽The app should be available on [http://127.0.0.1](http://127.0.0.1)
+
+Without [Docker](https://www.docker.com/):
+
 ```bash
 $ git clone git@github.com:clovisphere/mpesa-b2b-wrapper.git  # clone the repo
 $ cd mpesa-b2b-wrapper  # cd into project root
 $ export FLASK_ENV=development  # enable development mode
-$ export SECRET_KEY=dummy_secret_key  # set the secret key
+$ export SECRET_KEY=$(python -c "import secrets;print(secrets.token_urlsafe(16))") # generate a secret key
 $ pipenv install # install dependencies
 $ pipenv shell  # activate virtualenv
 $ flask db upgrade  # run migrations
@@ -70,7 +76,7 @@ $ coverage run -m pytest  # run tests
 $ coverage report -m  # generate coverage report
 ```
 
-If all went well, your app should be available on [http://localhost:5000](http://localhost:5000)
+If all went well, your app should be available on [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
 
 #### (2) Production
@@ -107,7 +113,7 @@ Set the below <u>**ENVIRONMENT_VARIABLES**</u> (they should be set in **.env**).
 
 ```bash
 $ export FLASK_ENV=production
-$ export SECRET_KEY=A21S4rWWGqre3ASDdU4EfqYfb545b3c1177c79de83216824a58787
+$ export SECRET_KEY=$(python -c "import secrets;print(secrets.token_urlsafe(16))") 
 $ export SQLALCHEMY_DATABASE_URI=mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}
 ```
 
