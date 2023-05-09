@@ -1,6 +1,26 @@
 version: '3.8'
 
 services:
+  app:
+    build:
+      context: ../
+      dockerfile: .devops/Dockerfile
+    container_name: flask-app
+    expose:
+      - "5000"
+    depends_on:
+      - db
+
+  nginx:
+    build:
+      context: ../
+      dockerfile: .devops/nginx/Dockerfile
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+
   wiremock:
     image: wiremock/wiremock:latest
     container_name: wiremock
