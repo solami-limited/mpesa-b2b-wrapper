@@ -5,6 +5,8 @@
 
 A wrapper that makes it easy to integrate with the [MPESA B2B API](https://developer.safaricom.co.ke/Documentation).
 
+![(simple) B2B Flow](docs/b2b_flow.svg)
+
 The below endpoints are available:
 
 ```bash
