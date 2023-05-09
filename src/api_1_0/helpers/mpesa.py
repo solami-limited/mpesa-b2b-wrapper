@@ -63,7 +63,6 @@ class MPESA:
                 return self.response, False
             # formulate a generic failure response
             current_app.logger.error(f" {self.data['pnr']=} | A similar B2B payment already exists.")
-            self.response['status_message'] = 'Cannot initiate B2B payment. PNR already exists.'
             return self.response, True
 
     def _build_b2b_payload(self, certificate: str) -> Dict[str, str]:
