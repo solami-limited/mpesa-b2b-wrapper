@@ -1,7 +1,9 @@
 # Git
 .git
 .gitignore
-
+# unused .env files
+.env
+.env.dev
 # Docker
 Dockerfile
 docker-compose.yml
