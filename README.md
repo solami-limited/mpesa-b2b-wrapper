@@ -23,7 +23,7 @@ The below endpoints are available:
 - [x] Dockerize
 - [x] Deployment (or how-to section on how to deploy or run the app in production)
 
-### Usage
+## Usage
 
 Make a copy of [.env.dev](.env.dev) file named `.env`, and make sure all the **ENVIRONMENT_VARIABLES** are set.
 
@@ -31,24 +31,21 @@ Make a copy of [.env.dev](.env.dev) file named `.env`, and make sure all the **E
 $ cp .env.dev .env  # make a copy of .env.dev called .env
 ```
 
-#### (1) Development
+### (1) Development
 
 Prerequisites:
 
 - [Python](https://www.python.org/downloads/release/python-3112/)
 - [Pipenv](https://pipenv.pypa.io/en/latest/)
 - [SQLite](https://www.sqlite.org/index.html)
-- [MariaDB](https://mariadb.org)
 
 With [Docker](https://www.docker.com/):
 
 Make sure you have both [docker](https://www.docker.com/) and 
-[docker-compose](https://docs.docker.com/compose/) installed locally 
-(use to mock [Daraja/M-PESA](https://developer.safaricom.co.ke) with [wiremock](https://wiremock.org) 
-and run MySQL in a container).
+[docker-compose](https://docs.docker.com/compose/) installed locally.
 
 ```bash
-docker-compose -f .devops/docker-compose.yml up --build
+$ docker-compose -f .devops/docker-compose.yml up --build
 ````
 
 ☝🏽The app should be available on [http://127.0.0.1](http://127.0.0.1)
@@ -79,14 +76,14 @@ $ coverage report -m  # generate coverage report
 If all went well, your app should be available on [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
 
-#### (2) Production
+### (2) Production
 
 Prerequisites:
 
 - [Nginx](https://www.nginx.com/)
 - [Python](https://www.python.org/downloads/release/python-3112/)
 - [Node.js](https://nodejs.org/en/)
-- [MySQL](https://www.mysql.com/)
+- [MySQL](https://www.mysql.com/) or [PostgreSQL](https://www.postgresql.org/)
 
 You may follow [this guide](https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04) to set up your server.
 
@@ -138,14 +135,28 @@ $ pm2 [reload|restart] mpesa-b2b-wrapper
 $ pm2 [stop|delete] mpesa-b2b-wrapper
 ```
 
-### Author
+###### Troubleshooting
+
+- If for some reason, you choose to use [PostgreSQL](https://www.postgresql.org/)
+instead of [MySQL](https://www.mysql.com/), you need to install the
+below dependencies (assuming you are using a Debian-based distro):
+
+```bash
+$ sudo apt-get install libpq-dev
+$ sudo apt-get install python3-psycopg2
+$ export SQLALCHEMY_DATABASE_URI=postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}
+```
+
+- To use a different Python version in your [Pipfile](./Pipfile), follow [this guide](https://bilard.medium.com/change-python-version-in-pipenv-1ac7b8f9b7b9).
+
+## Author
 
 Clovis Mugaruka
 
 - [github.com/clovisphere](https://github.com/clovisphere)
 - [twitter/clovisphere](https://twitter.com/clovisphere)
 
-### License
+## License
 
 Copyright ©️ 2023, [Clovis Mugaruka](https://clovisphere.com).\
 Released under the [MIT License](LICENSE).
