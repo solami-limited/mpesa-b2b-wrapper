@@ -34,22 +34,22 @@ class MPESA:
                 response, err = dict(), ''
                 try:
                     response = requests.post(url=endpoint, json=payload, headers=headers)
-                    if response.status_code == requests.codes.ok:
+                    if response.status_code in (requests.codes.ok, requests.codes.created, requests.codes.bad_request):
                         response = response.json()
+                    current_app.logger.info(f"{self.data['pnr']=} | B2B API response ~>\n\t{response}")
                 except (requests.ConnectTimeout, requests.ConnectionError, Exception) as e:
                     current_app.logger.error(f"{self.data['pnr']=} | An error occurred "
                                              f"while initiating B2B payment ~>\n\t{e}")
                     err = f'An error occurred while initiating B2B payment: {e}'
                 if err or response.get('errorCode') \
                         or response.get('ResponseCode', '-1') != current_app.config['MPESA_B2B_SUCCESS_CODE']:
+                    current_app.logger.error(f"{self.data['pnr']=} | Failed to initiate B2B payment")
                     self.response['status_code'] = current_app.config['GENERIC_FAILURE_CODE']
                     self.response['status_message'] = 'Failed to initiate B2B payment.'
                     if response.get('errorMessage'):
-                        current_app.logger.error(f"{self.data['pnr']=} | Failed to "
-                                                 f"initiate B2B payment ~>\n\t{response}")
                         self.response['status_message'] = response['errorMessage']
                     return self.response, True
-                current_app.logger.info(f" {self.data['pnr']=} | B2B payment initiated successfully ~>\n\t{response}")
+                current_app.logger.info(f" {self.data['pnr']=} | B2B payment initiated successfully")
                 # save the B2B payment record by spawning a new thread
                 Thread(
                     target=self._create_b2b_payment,
