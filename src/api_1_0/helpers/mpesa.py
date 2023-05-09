@@ -105,7 +105,8 @@ class MPESA:
             if record and record.status == StatusEnum.PENDING:
                 record.status = StatusEnum.SUCCESS if req.get('ResultCode') == 0 else StatusEnum.FAILED
                 db.session.commit()
-                ctx.logger.info(f"ConversationID: {req.get('ConversationID')} | B2B payment record updated successfully.")
+                ctx.logger.info(f"ConversationID: {req.get('ConversationID')} | "
+                                f"B2B payment record updated successfully.")
             else:
                 ctx.logger.error(f"ConversationID: {req.get('ConversationID')} | Transaction record not "
                                  f"found or already in a final state.")
