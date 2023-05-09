@@ -14,6 +14,7 @@ def index():
     """Handle the initiation of a payment"""
     data, error_message = Validator.validate(request.get_json(silent=True))
     if error_message:
+        current_app.logger.error(f'Invalid request payload:\n\t{error_message}')
         # return a bad request response with the error message
         return bad_request(error_message)
     response, error = MPESA(data).initiate_b2b()
@@ -35,6 +36,7 @@ def confirm(req: Dict[str, Any] = None):
     }
     # check if the request payload has the Result key
     if not data.get('Result'):
+        current_app.logger.error(f'Invalid request payload:\n\t{data}')
         response['ResultCode'] = current_app.config['GENERIC_FAILURE_CODE']
         response['ResultDesc'] = 'Invalid request payload.'
         return response, 400
