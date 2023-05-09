@@ -49,7 +49,6 @@ class MPESA:
                     current_app.logger.error(f"{self.data['pnr']=} | Failed to initiate B2B payment.")
                     if response.get('errorMessage'):
                         current_app.logger.error(f"{self.data['pnr']=} | {response['errorMessage']}")
-                        self.response['status_message'] = response['errorMessage']
                     return self.response, True
                 current_app.logger.info(f" {self.data['pnr']=} | B2B payment initiated successfully ~> \n{response}")
                 # save the B2B payment record by spawning a new thread
