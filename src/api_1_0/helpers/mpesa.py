@@ -22,7 +22,7 @@ class MPESA:
     def initiate_b2b(self) -> Tuple[dict, bool]:
         """Initiates a B2B payment."""
         with current_app.app_context():
-            current_app.logger.info(f"{self.data['pnr']=} | Initiating B2B payment...")
+            current_app.logger.info(f"PNR: {self.data['pnr']} | Initiating B2B payment...")
             record = B2B.query.filter_by(pnr=self.data['pnr']).first()
             if record is None:
                 endpoint = '{}/mpesa/b2b/v1/remittax'.format(os.environ.get('B2B_BASE_URL'))
@@ -36,19 +36,17 @@ class MPESA:
                     response = requests.post(url=endpoint, json=payload, headers=headers)
                     if response.status_code in (requests.codes.ok, requests.codes.created, requests.codes.bad_request):
                         response = response.json()
-                    current_app.logger.info(f"{self.data['pnr']=} | B2B API response ~>\n\t{response}")
+                    current_app.logger.info(f"PNR: {self.data['pnr']} | B2B API response ~>\n\t{response}")
                 except (requests.ConnectTimeout, requests.ConnectionError, Exception) as e:
-                    current_app.logger.error(f"{self.data['pnr']=} | An error occurred "
+                    current_app.logger.error(f"PNR: {self.data['pnr']} | An error occurred "
                                              f"while initiating B2B payment ~>\n\t{e}")
                     err = f'An error occurred while initiating B2B payment: {e}'
                 if err or response.get('errorCode'):
-                    current_app.logger.error(f"{self.data['pnr']=} | Failed to initiate B2B payment")
+                    current_app.logger.error(f"PNR: {self.data['pnr']} | Failed to initiate B2B payment")
                     self.response['status_code'] = current_app.config['GENERIC_FAILURE_CODE']
                     self.response['status_message'] = 'Failed to initiate B2B payment.'
-                    if response.get('errorMessage'):
-                        self.response['status_message'] = response['errorMessage']
                     return self.response, True
-                current_app.logger.info(f" {self.data['pnr']=} | B2B payment initiated successfully")
+                current_app.logger.info(f"PNR: {self.data['pnr']} | B2B payment initiated successfully")
                 # save the B2B payment record by spawning a new thread
                 Thread(
                     target=self._create_b2b_payment,
@@ -60,7 +58,7 @@ class MPESA:
                 self.response['status_message'] = 'B2B payment initiated successfully.'
                 return self.response, False
             # formulate a generic failure response
-            current_app.logger.error(f" {self.data['pnr']=} | A similar B2B payment already exists.")
+            current_app.logger.error(f"PNR: {self.data['pnr']} | A similar B2B payment already exists.")
             self.response['status_code'] = current_app.config['GENERIC_FAILURE_CODE']
             self.response['status_message'] = 'A similar B2B payment already exists.'
             return self.response, True
@@ -83,7 +81,7 @@ class MPESA:
     def _create_b2b_payment(self, ctx: Any, originator_conversation_id: str, conversation_id: str) -> None:
         """Saves the B2B payment record."""
         with ctx.app_context():
-            ctx.logger.info(f"{self.data['pnr']=} | Saving B2B payment record...")
+            ctx.logger.info(f"PNR: {self.data['pnr']} | Saving B2B payment record...")
             record = B2B(
                 amount=self.data['amount'],
                 pnr=self.data['pnr'],
@@ -92,13 +90,13 @@ class MPESA:
             )
             db.session.add(record)
             db.session.commit()
-            ctx.logger.info(f"{self.data['pnr']=} | B2B payment record saved successfully.")
+            ctx.logger.info(f"PNR: {self.data['pnr']} | B2B payment record saved successfully.")
 
     @staticmethod
     def update_b2b_payment(ctx: Any, req: Dict) -> None:
         """Updates the B2B payment record."""
         with ctx.app_context():
-            ctx.logger.info(f"{req.get('ConversationID')=} | Updating B2B payment record...")
+            ctx.logger.info(f"ConversationID: {req.get('ConversationID')} | Updating B2B payment record...")
             record = B2B.query\
                 .filter_by(conversation_id=req.get('ConversationID', '-1'))\
                 .filter_by(originator_conversation_id=req.get('OriginatorConversationID', '-1'))\
@@ -107,9 +105,9 @@ class MPESA:
             if record and record.status == StatusEnum.PENDING:
                 record.status = StatusEnum.SUCCESS if req.get('ResultCode') == 0 else StatusEnum.FAILED
                 db.session.commit()
-                ctx.logger.info(f"{req.get('ConversationID')=} | B2B payment record updated successfully.")
+                ctx.logger.info(f"ConversationID: {req.get('ConversationID')} | B2B payment record updated successfully.")
             else:
-                ctx.logger.error(f"{req.get('ConversationID')=} | Transaction record not "
+                ctx.logger.error(f"ConversationID: {req.get('ConversationID')} | Transaction record not "
                                  f"found or already in a final state.")
 
     @staticmethod
