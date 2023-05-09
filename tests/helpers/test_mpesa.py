@@ -67,7 +67,7 @@ def test_make_unsuccessful_initiate_b2b_call(app, mocker):
     """Test that B2B API returns an error and the initiate_b2b method handles it."""
     with app.app_context():
         response, _, _ = generic_mocking(mocker, 200, mock_unsuccessful_response)
-        assert response['status_message'] == 'Failed to initiate B2B payment.'
+        assert response['status_message'] == 'An error occurred while processing the request.'
         assert response['status_code'] == '999'
         assert response['account_reference'] == m.data['pnr']
 
