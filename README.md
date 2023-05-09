@@ -18,7 +18,7 @@ The below endpoints are available:
 <u>TODO</u>:
 
 - [x] Unit tests
-- [ ] Logging
+- [x] Logging
 - [x] CI/CD
 - [x] Dockerize
 - [x] Deployment (or how-to section on how to deploy or run the app in production)
