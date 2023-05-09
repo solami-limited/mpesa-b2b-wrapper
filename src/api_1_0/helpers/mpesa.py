@@ -41,8 +41,7 @@ class MPESA:
                     current_app.logger.error(f"{self.data['pnr']=} | An error occurred "
                                              f"while initiating B2B payment ~>\n\t{e}")
                     err = f'An error occurred while initiating B2B payment: {e}'
-                if err or response.get('errorCode') \
-                        or response.get('ResponseCode', '-1') != current_app.config['MPESA_B2B_SUCCESS_CODE']:
+                if err or response.get('errorCode'):
                     current_app.logger.error(f"{self.data['pnr']=} | Failed to initiate B2B payment")
                     self.response['status_code'] = current_app.config['GENERIC_FAILURE_CODE']
                     self.response['status_message'] = 'Failed to initiate B2B payment.'
