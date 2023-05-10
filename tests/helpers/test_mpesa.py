@@ -26,6 +26,8 @@ payload = {
     'AccountReference': m.data['pnr'],
     'Amount': m.data['amount'],
     'CommandID': '6ytx',
+    'SenderIdentifierType': '1',
+    'RecieverIdentifierType': '1',
     'Initiator': 'Safaricom',
     'PartyA': '222',
     'PartyB': 'Tax123@example',

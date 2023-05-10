@@ -69,6 +69,8 @@ class MPESA:
             'Initiator': os.environ.get('B2B_INITIATOR'),
             'SecurityCredential': MPESA.rsa_encrypt(os.environ.get('B2B_INITIATOR_PASSWORD'), certificate),
             'CommandID': os.environ.get('B2B_COMMAND_ID'),
+            'SenderIdentifierType': os.environ.get('SENDER_IDENTIFIER_TYPE'),
+            'RecieverIdentifierType': os.environ.get('RECIEVER_IDENTIFIER_TYPE'),
             'Amount': self.data['amount'],
             'PartyA': os.environ.get('B2B_SHORT_CODE'),
             'PartyB': os.environ.get('PAY_TAX_CODE'),
