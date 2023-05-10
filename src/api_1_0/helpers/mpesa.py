@@ -13,6 +13,7 @@ from src.api_1_0.models.b2b import B2B, StatusEnum
 
 class MPESA:
     """A class that handles all MPESA related transactions."""
+
     def __init__(self, req: dict):
         """Initializes the MPESA class."""
         self.data = req
@@ -34,14 +35,19 @@ class MPESA:
                 response, err = dict(), ''
                 try:
                     response = requests.post(url=endpoint, json=payload, headers=headers)
-                    if response.status_code in (requests.codes.ok, requests.codes.created, requests.codes.bad_request):
-                        response = response.json()
+                    # Not liking this as we need to check for the returned status code
+                    # but the daraja API returns a 200 status code even when the request fails,
+                    # so we have to check for the errorCode in the response body
+                    response = response.json()
                     current_app.logger.info(f"PNR: {self.data['pnr']} | B2B API response ~>\n\t{response}")
-                except (requests.ConnectTimeout, requests.ConnectionError, Exception) as e:
+                except (requests.JSONDecodeError, requests.ConnectTimeout,
+                        requests.ConnectionError, Exception) as e:
                     current_app.logger.error(f"PNR: {self.data['pnr']} | An error occurred "
                                              f"while initiating B2B payment ~>\n\t{e}")
                     err = f'An error occurred while initiating B2B payment: {e}'
-                if err or response.get('errorCode'):
+                if err or response.get('errorCode') or \
+                        'ConversationID' not in response.keys() or \
+                        'OriginatorConversationID' not in response.keys():  # is this even needed?
                     current_app.logger.error(f"PNR: {self.data['pnr']} | Failed to initiate B2B payment")
                     self.response['status_code'] = current_app.config['GENERIC_FAILURE_CODE']
                     self.response['status_message'] = 'Failed to initiate B2B payment.'
@@ -99,10 +105,10 @@ class MPESA:
         """Updates the B2B payment record."""
         with ctx.app_context():
             ctx.logger.info(f"ConversationID: {req.get('ConversationID')} | Updating B2B payment record...")
-            record = B2B.query\
-                .filter_by(conversation_id=req.get('ConversationID', '-1'))\
-                .filter_by(originator_conversation_id=req.get('OriginatorConversationID', '-1'))\
-                .order_by(B2B.id.desc())\
+            record = B2B.query \
+                .filter_by(conversation_id=req.get('ConversationID', '-1')) \
+                .filter_by(originator_conversation_id=req.get('OriginatorConversationID', '-1')) \
+                .order_by(B2B.id.desc()) \
                 .first()
             if record and record.status == StatusEnum.PENDING:
                 record.status = StatusEnum.SUCCESS if req.get('ResultCode') == 0 else StatusEnum.FAILED
