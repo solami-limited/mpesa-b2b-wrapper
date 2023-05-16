@@ -99,8 +99,8 @@ $ sudo chmod -R 755 /var/www/mpesa-b2b-wrapper
 
 <u>IMPORTANT</u>:
 
-1. Make sure to add your **public_key.cer** in [config/cert](config/cert).
-2. You need to create a **.env** file in the project root, and copy all the **ENVIRONMENT_VARIABLES** in [.env-dev](./.env.dev) to it.
+1. You need to create a **.env** file in the project root, and copy all the **ENVIRONMENT_VARIABLES** in [.env.dev](./.env.dev) to it.
+2. Make sure to add your **PUBLIC KEY** in [config/cert](config/cert), the name of the key is to be specified in the **.env** file as **SSL_CERT**.
 
 ```bash
 $ pip install pipenv

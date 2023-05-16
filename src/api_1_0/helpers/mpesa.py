@@ -26,22 +26,22 @@ class MPESA:
             current_app.logger.info(f"PNR: {self.data['pnr']} | Initiating B2B payment...")
             record = B2B.query.filter_by(pnr=self.data['pnr']).first()
             if record is None:
-                endpoint = '{}/mpesa/b2b/v1/remittax'.format(os.environ.get('B2B_BASE_URL'))
-                payload = self._build_b2b_payload(current_app.config['CERTIFICATE'])
-                headers = {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer {}'.format(MPESA.generate_access_token())
-                }
                 response, err = dict(), ''
                 try:
+                    endpoint = '{}/mpesa/b2b/v1/remittax'.format(os.environ.get('B2B_BASE_URL'))
+                    headers = {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer {}'.format(MPESA.generate_access_token())
+                    }
+                    payload = self._build_b2b_payload(current_app.config['CERTIFICATE'])  # this may throw an error
+                    current_app.logger.debug(f"PNR: {self.data['pnr']} | with payload ~>\n\t{payload}")
                     response = requests.post(url=endpoint, json=payload, headers=headers)
                     # Not liking this as we need to check for the returned status code
                     # but the daraja API returns a 200 status code even when the request fails,
                     # so we have to check for the errorCode in the response body
                     response = response.json()
                     current_app.logger.info(f"PNR: {self.data['pnr']} | B2B API response ~>\n\t{response}")
-                except (requests.JSONDecodeError, requests.ConnectTimeout,
-                        requests.ConnectionError, Exception) as e:
+                except (FileNotFoundError, ValueError, requests.ConnectTimeout, requests.RequestException) as e:
                     current_app.logger.error(f"PNR: {self.data['pnr']} | An error occurred "
                                              f"while initiating B2B payment ~>\n\t{e}")
                     err = f'An error occurred while initiating B2B payment: {e}'
@@ -69,14 +69,14 @@ class MPESA:
             self.response['status_message'] = 'A similar B2B payment already exists.'
             return self.response, True
 
-    def _build_b2b_payload(self, certificate: str) -> Dict[str, str]:
+    def _build_b2b_payload(self, certificate_path: str) -> Dict[str, str]:
         """Builds the payload for the B2B request."""
         return {
             'Initiator': os.environ.get('B2B_INITIATOR'),
-            'SecurityCredential': MPESA.rsa_encrypt(os.environ.get('B2B_INITIATOR_PASSWORD'), certificate),
+            'SecurityCredential': MPESA.rsa_encrypt(os.environ.get('B2B_INITIATOR_PASSWORD'), certificate_path),
             'CommandID': os.environ.get('B2B_COMMAND_ID'),
             'SenderIdentifierType': os.environ.get('SENDER_IDENTIFIER_TYPE'),
-            'RecieverIdentifierType': os.environ.get('RECIEVER_IDENTIFIER_TYPE'),
+            'RecieverIdentifierType': os.environ.get('RECIEVER_IDENTIFIER_TYPE'),  # typo in the docs 🤦🏽‍♀️
             'Amount': self.data['amount'],
             'PartyA': os.environ.get('B2B_SHORT_CODE'),
             'PartyB': os.environ.get('PAY_TAX_CODE'),
@@ -120,30 +120,28 @@ class MPESA:
                                  f"found or already in a final state.")
 
     @staticmethod
-    def rsa_encrypt(password: str, certificate: str) -> str:
+    def rsa_encrypt(password: str, certificate_path: str) -> str:
         """Encrypts the password using the certificate provided."""
         with current_app.app_context():
-            encryption = ''
-            try:
-                with open(certificate, 'rb') as f:
-                    cert = RSA.importKey(f.read())
-                cipher = PKCS1_v1_5.new(cert)
-                encryption = base64.b64encode(cipher.encrypt(password.encode('utf-8'))).decode('utf-8')
-            except (FileNotFoundError, Exception) as _:
-                pass
+            if not os.path.exists(certificate_path):
+                raise FileNotFoundError(f"Certificate file not found at: {certificate_path}")
+            # open the certificate file
+            with open(certificate_path, 'r') as certificate:
+                # import the certificate
+                key = RSA.importKey(certificate.read())
+                # create a cipher object
+                cipher = PKCS1_v1_5.new(key)
+                # encrypt the password
+                encryption = base64.b64encode(cipher.encrypt(password.encode())).decode()
             return encryption
 
     @staticmethod
     def generate_access_token() -> str:
         """Generates an access token for the B2B request."""
-        token = ''
         try:
-            response = requests.get(
+            return requests.get(
                 url='{}/oauth/v1/generate?grant_type=client_credentials'.format(os.environ.get('B2B_BASE_URL')),
                 auth=HTTPBasicAuth(os.environ.get('B2B_ACCESS_KEY'), os.environ.get('B2B_CONSUMER_SECRET'))
-            )
-            if response.status_code == requests.codes.ok:
-                token = response.json()['access_token']
-        except (requests.ConnectTimeout, requests.ConnectionError, Exception) as _:  # noqa
-            pass
-        return token
+            ).json()['access_token']
+        except (requests.ConnectTimeout, requests.RequestException) as e:
+            raise ValueError(f"Failed to generate access token: {e}")

@@ -2,6 +2,9 @@ import uuid
 from random import randint
 from typing import Tuple
 from unittest.mock import MagicMock
+
+import pytest
+
 from src.api_1_0.helpers.mpesa import MPESA
 
 # the mpesa object to be used in the tests
@@ -72,6 +75,20 @@ def test_make_unsuccessful_initiate_b2b_call(app, mocker):
         assert response['status_message'] == 'Failed to initiate B2B payment.'
         assert response['status_code'] == '999'
         assert response['account_reference'] == m.data['pnr']
+
+
+def test_rsa_encrypt_raises_correct_exception(app):
+    """Test that the rsa_encrypt method raises the correct exception."""
+    with app.app_context():
+        with pytest.raises(FileNotFoundError):
+            m.rsa_encrypt('password', 'not/a/real/path')
+
+
+def test_generate_access_token_raises_correct_exception(app, supply_test_config):
+    """Test that the generate_access_token method raises the correct exception."""
+    with app.app_context():
+        with pytest.raises(ValueError):
+            m.generate_access_token()
 
 
 def generic_mocking(mocker: MagicMock, status_code: int, mock_response: dict) -> Tuple[dict, bool, MagicMock]:

@@ -4,7 +4,10 @@ LABEL authors="clov"
 ENV CONTAINER_HOME=/var/www/mpesa-b2b-wrapper
 
 # update apt-get and install dependencies
-RUN apt-get update && apt-get -y install libpq-dev gcc netcat
+RUN apt-get update && apt-get -y install \
+    libpq-dev \
+    gcc \
+    netcat && rm -rf /var/lib/apt/lists/*
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -22,7 +25,7 @@ RUN pipenv install --system --deploy --ignore-pipfile
 # copy project
 COPY .. .
 
-# Rename .env.dev file to .env
+# Rename .env.docker file to .env
 RUN mv .env.docker .env
 
 # give permissions to entrypoint.sh
