@@ -1,7 +1,7 @@
 # MPESA B2B API (wrapper)
 
 [![PyTest](https://github.com/clovisphere/mpesa-b2b-wrapper/actions/workflows/pytest.yml/badge.svg?branch=main)](https://github.com/clovisphere/mpesa-b2b-wrapper/actions/workflows/pytest.yml)
-[![Coverage Status](https://coveralls.io/repos/github/clovisphere/mpesa-b2b-wrapper/badge.svg)](https://coveralls.io/github/clovisphere/mpesa-b2b-wrapper)
+[![Coverage Status](https://coveralls.io/repos/github/clovisphere/mpesa-b2b-wrapper/badge.svg?branch=main)](https://coveralls.io/github/clovisphere/mpesa-b2b-wrapper?branch=main)
 
 A wrapper that makes it easy to integrate with the [MPESA B2B API](https://developer.safaricom.co.ke/Documentation).
 
