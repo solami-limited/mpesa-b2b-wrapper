@@ -21,8 +21,9 @@ The below endpoints are available:
 
 - [x] Unit tests
 - [x] Logging
+- [ ] Swagger docs
 - [x] CI/CD
-- [x] Dockerize
+- [x] Dockerize (partially.. only for development)
 - [x] Deployment (or how-to section on how to deploy or run the app in production)
 
 ## Usage
