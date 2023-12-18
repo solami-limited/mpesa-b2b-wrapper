@@ -13,6 +13,7 @@ from src.api_1_0.routes.error import bad_request
 def index():
     """Handle the initiation of a payment"""
     data, error_message = Validator.validate(request.get_json(silent=True))
+    current_app.logger.error(f'Received request:\n\t{data}')
     if error_message:
         current_app.logger.error(f'Invalid request payload:\n\t{error_message}')
         # return a bad request response with the error message
@@ -28,6 +29,7 @@ def confirm(req: Dict[str, Any] = None):
     data = request.get_json(silent=True) if not req else req
     tpt = datetime.now(pytz.timezone(current_app.config['TIME_ZONE']))\
         .strftime(current_app.config['TIME_FORMAT'])
+    current_app.logger.error(f'Received request:\n\t{data}')
     # final response template to be returned to the client
     response = {
         'ResultCode': current_app.config['MPESA_B2B_FAILURE_CODE'],
